@@ -1,36 +1,37 @@
 -- Lisää CREATE TABLE lauseet tähän tiedostoon
-CREATE TABLE TASK(
-   ID INTEGER PRIMARY KEY DEFAULT NEXTVAL(‘SERIAL’),
-   USER_ID        INT       NOT NULL,
-   TITLE          TEXT(50)  NOT NULL,
-   DESCRIPTION    TEXT(200) NOT NULL,
-   PRIORITY       INT       NOT NULL,
-   DUE_DATE       DATE      NOT NULL,
-   STATUS         INT       NOT NULL,
-   CREATED_AT     TIMESTAMP NOT NULL,
-   MODIFIED_AT    TIMESTAMP NOT NULL,
+
+CREATE TABLE USERS(
+   id             SERIAL PRIMARY KEY,
+   username       VARCHAR(25)  NOT NULL,
+   password       VARCHAR(25)  NOT NULL,
+   created_at     TIMESTAMP NOT NULL,
+   modified_at    TIMESTAMP NOT NULL
 );
 
-
-CREATE TABLE USER(
-   ID INTEGER PRIMARY KEY DEFAULT NEXTVAL(‘SERIAL’),
-   USERNAME       TEXT(25)  NOT NULL,
-   PASSWORD       TEXT(25)  NOT NULL,
-   AGE            INT       NOT NULL,
-   CREATED_AT     TIMESTAMP NOT NULL,
-   MODIFIED_AT    TIMESTAMP NOT NULL,
+CREATE TABLE TASKS(
+   id             SERIAL PRIMARY KEY,
+   user_id        INTEGER REFERENCES USERS(id),
+   title          VARCHAR(50)  NOT NULL,
+   description    VARCHAR(200) NOT NULL,
+   priority       INTEGER   NOT NULL,
+   due_date       DATE      NOT NULL,
+   status         INTEGER   NOT NULL,
+   created_at     TIMESTAMP NOT NULL,
+   modified_at    TIMESTAMP NOT NULL
 );
 
-CREATE TABLE CATEGORY(
-   ID INTEGER PRIMARY KEY DEFAULT NEXTVAL(‘SERIAL’),
-   USER_ID        INT       NOT NULL,
-   TITLE          TEXT(25)  NOT NULL,
-   CREATED_AT     TIMESTAMP NOT NULL,
-   MODIFIED_AT    TIMESTAMP NOT NULL,
+CREATE TABLE CATEGORIES(
+   id             SERIAL PRIMARY KEY,
+   user_id        INTEGER REFERENCES USERS(id),
+   title          VARCHAR(25)  NOT NULL,
+   created_at     TIMESTAMP NOT NULL,
+   modified_at    TIMESTAMP NOT NULL
 );
 
 CREATE TABLE TASK_CATEGORY(
-   ID INTEGER PRIMARY KEY DEFAULT NEXTVAL(‘SERIAL’),
-   TASK_ID        INT       NOT NULL,
-   CATEGORY_ID    INT       NOT NULL
+   id             SERIAL PRIMARY KEY,
+   task_id        INTEGER REFERENCES TASKS(id),
+   category_id    INTEGER REFERENCES CATEGORIES(id),
+   created_at     TIMESTAMP NOT NULL,
+   modified_at    TIMESTAMP NOT NULL
 );
