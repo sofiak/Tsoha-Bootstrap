@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{task.title}}</h1>
+  <!-- Painikkeet tähän -->
+  <p>
+    <a href="{{base_path}}/tasks/delete/{{task.id}}" class="btn btn-danger">Poista</a> <a href="{{base_path}}/tasks/edit/{{task.id}}" class="btn btn-default">Muokkaa</a>
+  </p>
+  <!-- Tiedot tulee listana tähän -->
+  <ul>
+    {% if task.priority == 1 %}
+      <li><strong>Prioriteetti:</strong> Korkea</li>
+    {% endif %}
+    {% if task.priority == 2 %}
+      <li><strong>Prioriteetti:</strong> Normaali</li>
+    {% endif %}
+    {% if task.priority == 3 %}
+      <li><strong>Prioriteetti:</strong> Matala</li>
+    {% endif %}
+    <li><strong>Deadline:</strong> {{task.due_date}}</li>
+    {% if task.status == 1 %}
+      <li><strong>Status:</strong> Ei suoritettu</li>
+    {% endif %}
+    {% if task.status == 2 %}
+      <li><strong>Status:</strong> Suoritettu</li>
+    {% endif %}
+    
+  </ul>
+  <!-- Kuvaus tulee tähän -->
+  <p>
+    {{task.description}}
+  </p>
+{% endblock %}

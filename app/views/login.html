@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Kirjaudu sisään</h1>
+
+  <!-- Kaikki lomakkeen elementit form-tagin sisään -->
+  <form method="post" action="{{base_path}}/login">
+
+    <!-- Tekstikenttä käyttäjätunnukselle -->
+    <p class="text-danger">{{error}}</p>
+
+    <p class="text-info">{{message}}</p>
+
+    <div class="form-group">
+      <label>Käyttäjätunnus</label>
+      <input type="text" class="form-control" name="username" value="{{username}}">
+    </div>
+
+    <!-- Salasanakenttä salasanalle -->
+    <div class="form-group">
+      <label>Salasana</label>
+      <input type="password" class="form-control" name="password">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kirjaudu sisään</button>
+  </form>
+
+   <p>
+    <a href="{{base_path}}/signup">Luo käyttäjätunnus</a>
+  </p>
+{% endblock %}

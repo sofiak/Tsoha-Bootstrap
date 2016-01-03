@@ -21,9 +21,23 @@
 
       foreach($this->validators as $validator){
         // Kutsu validointimetodia tässä ja lisää sen palauttamat virheet errors-taulukkoon
+        $validator_errors = $this->{$validator}();
+        $errors = array_merge($errors, $validator_errors);
       }
 
       return $errors;
+    }
+
+    protected function validate_string_length($string, $fieldname, $length = 3){
+        $errors = array();
+          if($string == '' || $string == null){
+            $errors[] = $fieldname.' ei saa olla tyhjä!';
+          }
+          if(strlen($string) < $length){
+            $errors[] = $fieldname.' tarvitsee ainakin '.$length.' merkkiä.';
+          }
+
+          return $errors;
     }
 
   }

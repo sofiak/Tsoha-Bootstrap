@@ -10,7 +10,7 @@ class User extends BaseModel {
   	if (is_array($attributes)) {
   		parent::__construct($attributes);
   	}
-    
+    $this->validators = array('validate_username', 'validate_password');
   }
 
   public function all()
@@ -32,7 +32,7 @@ class User extends BaseModel {
   	return $users;
   }
 
-  public function find($id)
+  public static function find($id)
   {
   	$query = DB::connection()->prepare("SELECT * FROM USERS WHERE id = :id LIMIT 1");
   	$query->execute(array('id' => $id));
@@ -45,7 +45,7 @@ class User extends BaseModel {
   	}
   }
 
-  public function checkCredentials($username, $password)
+  public static function authenticate($username, $password)
   {
   	$query = DB::connection()->prepare("SELECT * FROM USERS WHERE username = :username AND password = :password LIMIT 1");
   	$query->execute(array('username' => $username, 'password' => $password));
@@ -81,10 +81,50 @@ class User extends BaseModel {
 	   	}
   }
 
-  public function delete()
+  public function update()
+  {
+    $query = DB::connection()->prepare('UPDATE USERS SET username = :username, password = :password, modified_at = now() WHERE id = :id');
+    $query->execute(array('username' => $this->username, 'password' => $this->password, 'id' => $this->id));
+
+    return $this->id;
+  }
+
+
+  public function destroy()
   {
   	$query = DB::connection()->prepare('DELETE FROM USERS WHERE id = :id');
   	$query->execute(array('id' => $this->id));
   	return true;
+  }
+
+  protected function validate_username(){
+    $errors = array();
+
+    $validator_errors = $this->validate_string_length($this->username, 'Käyttäjätunnus');
+    $errors = array_merge($errors, $validator_errors);
+
+    return $errors;
+  }
+
+  protected function validate_password(){
+    $errors = array();
+
+    $validator_errors = $this->validate_string_length($this->password, 'Salasana', 6);
+    $errors = array_merge($errors, $validator_errors);
+
+    return $errors;
+  }
+
+  public function check_username_exists(){
+
+    $query = DB::connection()->prepare("SELECT * FROM USERS WHERE lower(username) = :username LIMIT 1");
+    $query->execute(array('username' => strtolower($this->username)));
+    $row = $query->fetch();
+    if ($row) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
 }
