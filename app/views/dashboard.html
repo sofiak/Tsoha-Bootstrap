@@ -1,71 +1,98 @@
 {% extends "base.html" %}
 {% block content %}
   {% if user_logged_in %}
-    <h1>Kaikki tehtävät</h1>
+    {% if category == 'all' %}
+      {% if search %}
+        <h1>Kaikki tehtävät: {{search}}</h1>
+      {% else %}
+        <h1>Kaikki tehtävät</h1>
+      {% endif %}
+    {% else %}
+    <h1>Kategoria: {{category.title}}</h1>
+    {% endif %}
   {% endif %}
-
+  {% if category != 'all' %}
   <p>
-    <a href="{{base_path}}/tasks/create" class="btn btn-success">Luo uusi tehtävä</a>
+    <a href="{{base_path}}/categories/delete/{{category.id}}" class="btn btn-danger btn-sm">Poista kategoria</a>
   </p>
+  {% endif %}
   <div class="row">
     
     <div class="col-md-2">
        <table class="table table-striped table-bordered">
         <thead>
           <tr>
-            <th>Categories</th>
+            <th>Kategoriat <a href="{{base_path}}/categories/create">Uusi + </a></th>
           </tr>
         </thead>
 
         <tbody>
           <!-- Listataan pelit tähän -->
           <tr>
-            <td><a href="{{base_path}}">All</a></td>
+            <td><a href="{{base_path}}">Näytä kaikki</a></td>
           </tr>
+          {% for category in categories %}
+          <tr>
+          <td><a href="{{base_path}}/tasks/category/{{category.id}}">{{category.title}}</a></td>
+          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
     <div class="col-md-10">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>Nimi</th>
-            <th>Prioriteetti</th>
-            <th>Deadline</th>
-            <th>Status</th>
-            <th>Merkitse suoritetuksi</th>
-          </tr>
-        </thead>
+       <div class="row">
+          <p>
+            <a href="{{base_path}}/tasks/create">Luo uusi tehtävä</a>
+          </p>
+      </div>
+      <div class="row">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Nimi</th>
+              <th>Prioriteetti</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Muokkaa statusta</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          <!-- Listataan pelit tähän -->
-          {% if tasks %}
-                {% for task in tasks %}
-                  <tr>
-                    <td><a href="{{base_path}}/tasks/task/{{task.id}}">{{task.title}}</a></td>
-                    {% if task.priority == 1 %}
-                    <td>Korkea</td>
-                    {% endif %}
-                    {% if task.priority == 2 %}
-                    <td>Normaali</td>
-                    {% endif %}
-                    {% if task.priority == 3 %}
-                    <td>Matala</td>
-                    {% endif %}
-                    <td>{{task.due_date}}</td>
-                    {% if task.status == 0 %}
-                    <td>Ei suoritettu</td>
-                    {% endif %}
-                    {% if task.status == 1 %}
-                    <td>Suoritettu</td>
-                    {% endif %}
-                    <td><a href="{{base_path}}/tasks/complete/{{task.id}}" class="btn btn-success">Suorita</a></td>
-                  </tr>
-                {% endfor %}
-          {% endif %}
-         
-        </tbody>
-      </table>
+          <tbody>
+            <!-- Listataan pelit tähän -->
+            {% if tasks %}
+                  {% for task in tasks %}
+                    <tr>
+                      <td><a href="{{base_path}}/tasks/task/{{task.id}}">{{task.title}}</a></td>
+                      {% if task.priority == 1 %}
+                      <td>Korkea</td>
+                      {% endif %}
+                      {% if task.priority == 2 %}
+                      <td>Normaali</td>
+                      {% endif %}
+                      {% if task.priority == 3 %}
+                      <td>Matala</td>
+                      {% endif %}
+                      <td>{{task.due_date}}</td>
+                      {% if task.status == 0 %}
+                      <td>Ei suoritettu</td>
+                      {% endif %}
+                      {% if task.status == 1 %}
+                      <td>Suoritettu</td>
+                      {% endif %}
+                      {% if task.status == 0 %}
+                      <td><a href="{{base_path}}/tasks/complete/{{task.id}}" class="btn btn-success">Suoritettu</a></td>
+                      {% endif %}
+                      {% if task.status == 1 %}
+                      <td><a href="{{base_path}}/tasks/incomplete/{{task.id}}" class="btn btn-warning">Ei suoritettu</a></td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+            {% endif %}
+           
+          </tbody>
+        </table>
+      </div>
+      
     </div>
 
   </div>

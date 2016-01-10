@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Edit Task</h1>
+  <h1>Muokkaa</h1>
   
   {% if errors %}
     <div class="alert alert-danger">
@@ -27,6 +27,19 @@
     <div class="form-group">
       <label>Deadline</label>
       <input type="date" class="form-control" value="{{task.due_date}}" name="due_date">
+    </div>
+
+    <div class="form-group">
+      <label>Kategoria</label>
+      <select class="form-control" name="categories[]" multiple="">
+        {% for category in categories %}
+          {% if category.id in task_categories %}
+          <option value="{{category.id}}" selected>{{category.title}}</option>
+          {% else %}
+          <option value="{{category.id}}">{{category.title}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
     </div>
 
     <div class="form-group">
